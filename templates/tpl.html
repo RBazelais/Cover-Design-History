@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Covers</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <style>
+        #project-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 1em;
+        }
+
+        #project-icon {
+            float: left;
+            height: 32px;
+            width: 32px;
+        }
+
+        #project-description {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <script>
+        $(function () {
+            $("#project").autocomplete({
+                minLength: 0,
+                source: '/autocomplete',
+
+                focus: function (event, ui) {
+                    $("#project").val(ui.item.label);
+                    return false;
+                },
+
+                select: function (event, ui) {
+                    $("#project").val(ui.item.label);
+                    $("#project-id").val(ui.item.value);
+                    $("#project-description").html(ui.item.desc);
+                    $("#project-icon").attr("src", "images/" + ui.item.icon);
+
+                    return false;
+                },
+
+                _renderMenu: function (ul, items) {
+                    console.log(items);
+                    var self = this;
+                    $.each(items.authors, function (index, item) {
+                        self._renderItem(ul, item, 'author');
+                    });
+                    $.each(items.books, function (index, item) {
+                        self._renderItem(ul, item, 'book');
+                    });
+                }
+            })
+            .autocomplete( "instance" )._renderItem = function( ul, item, type ) {
+                return $( "<li>" )
+                .append( "<a>" + type + ': ' + item.label + "<br>" + item.desc + "</a>" )
+                .appendTo( ul );
+            };
+        });
+    </script>
+</head>
+<body>
+
+<div id="project-label">Select a project (type "j" for a start):</div>
+<img id="project-icon" src="images/transparent_1x1.png" class="ui-state-default" alt="">
+<input id="project">
+<input type="hidden" id="project-id">
+<p id="project-description"></p>
+
+
+</body>
+</html>
